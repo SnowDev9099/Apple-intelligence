@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline AI Chatbot</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .chat-container { max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; }
+    .chat-box { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+    .chat-box p { margin: 5px 0; }
+    .input-area { display: flex; margin-top: 10px; }
+    .input-area input { flex: 1; padding: 10px; }
+    .input-area button { padding: 10px; }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="chat-box" id="chat-box">
+    <p><strong>Bot:</strong> Hello! How can I help you today?</p>
+  </div>
+  
+  <div class="input-area">
+    <input type="text" id="user-input" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  let model;
+
+  // Load a smaller GPT model
+  async function loadModel() {
+    // Here you can load your model from a file, or use an online-hosted model
+    model = await tf.loadGraphModel('path/to/your/model.json');
+    console.log("Model loaded successfully!");
+  }
+
+  // Function to handle user input and get AI response
+  async function sendMessage() {
+    const inputBox = document.getElementById('user-input');
+    const chatBox = document.getElementById('chat-box');
+    
+    const userInput = inputBox.value;
+    inputBox.value = '';
+
+    // Display user input
+    chatBox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+
+    // Get response from the model (simplified example, this needs more work for GPT-like models)
+    const response = await getAIResponse(userInput);
+
+    // Display AI response
+    chatBox.innerHTML += `<p><strong>Bot:</strong> ${response}</p>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Simulate an AI response based on input (use the model for real inference)
+  async function getAIResponse(input) {
+    // Here you would use the model to generate the response based on the input
+    const tensorInput = tf.tensor([input]); // This is a placeholder
+    const prediction = model.predict(tensorInput); // Predict using the model
+    const output = prediction.dataSync(); // Convert prediction to output
+    return output;
+  }
+
+  // Load the model when the page loads
+  window.onload = loadModel;
+</script>
+
+</body>
+</html>
